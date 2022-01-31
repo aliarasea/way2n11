@@ -20,7 +20,8 @@
             <div th:each="presentation: ${periodMap.value.presentations}">
                 <span th:text="${presentation.start.toLocalTime()}"/>
                 <span th:text="${presentation.name}"/>
-                <span th:text="${presentation.duration}"/>min
+                <span th:if="${presentation.duration} > 5" th:text="${presentation.duration.toString().concat('min')}"/>
+                <span th:if="${presentation.duration} <= 5" th:text="${presentation.type}"/>
             </div>
         </div>
     </div>
@@ -38,7 +39,8 @@
             <div th:each="presentation: ${periodMap.value.presentations}">
                 <span th:text="${presentation.start.toLocalTime()}"/>
                 <span th:text="${presentation.name}"/>
-                <span th:text="${presentation.duration}"/>min
+                <span th:if="${presentation.duration} > 5" th:text="${presentation.duration.toString().concat('min')}"/>
+                <span th:if="${presentation.duration} <= 5" th:text="${presentation.type}"/>
             </div>
         </div>
     </div>

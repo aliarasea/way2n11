@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+import static com.aliaras.api.constant.Constant.NETWORKING_EVENT_NAME;
+
 public final class ConferenceUtil {
 
     private static Period createPeriod(PeriodType periodType) {
@@ -125,8 +127,12 @@ public final class ConferenceUtil {
                 long networkingDuration = getNetworkingDuration(offset);
 
                 Presentation networking = Presentation.builder()
-                        .type(PresentationType.NETWORKING.name())
-                        .name(PresentationType.NETWORKING.name())
+                        .type(
+                                networkingDuration > 5 ?
+                                        PresentationType.REGULAR.name() :
+                                        PresentationType.LIGHTNING.name()
+                        )
+                        .name(NETWORKING_EVENT_NAME)
                         .duration((int) networkingDuration)
                         .start(lastPresentation.getEnd())
                         .end(lastPresentation.getEnd().plusMinutes(networkingDuration))
