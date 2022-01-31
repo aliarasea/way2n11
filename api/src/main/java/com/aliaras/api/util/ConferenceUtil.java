@@ -6,10 +6,11 @@ import com.aliaras.api.entity.Period;
 import com.aliaras.api.entity.Presentation;
 import com.aliaras.api.entity.Track;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
-
-import static com.aliaras.api.constant.Constant.TR_TIME_ZONE_ID;
 
 public final class ConferenceUtil {
 
@@ -48,7 +49,7 @@ public final class ConferenceUtil {
 
         long totalDuration = assignPresentationLoop(presentations, periods, start, unsetPresentations);
 
-        //setNetworking(periods.get(PeriodType.PM), presentations, totalDuration);
+        setNetworking(periods.get(PeriodType.PM), presentations, totalDuration);
 
         tracks.add(new Track(String.format("Track %s", tracks.size() + 1), periods));
 
@@ -94,44 +95,48 @@ public final class ConferenceUtil {
         Collections.shuffle(presentations);
     }
 
-    private static void setNetworking(Period period, List<Presentation> wholePresentations, long totalDuration) {
-        List<Presentation> periodPresentations = period.getPresentations();
-        if (periodPresentations.size() > 0) {
-            Presentation lastPresentation = periodPresentations.get(periodPresentations.size() - 1);
-
-            LocalDateTime networkingStart = lastPresentation.getEnd();
+    private static void setNetworking(Period period, List<Presentation> presentations, long totalDuration) {
+        if (presentations.size() > 0) {
+            List<Presentation> periodPresentations = period.getPresentations();
+            LocalDateTime networkingStart = period.getEnd().minusHours(1);
+            if (periodPresentations.size() > 0) {
+                networkingStart = periodPresentations.get(periodPresentations.size() - 1).getEnd();
+            }
             LocalDateTime networkingEnd = period.getEnd();
-
             boolean isNetworkingTimingOk =
                     networkingStart.isBefore(networkingEnd) &&
                             (networkingEnd.isEqual(period.getEnd().minusMinutes(60))
                                     || networkingEnd.isAfter(period.getEnd().minusMinutes(60)));
 
             if (isNetworkingTimingOk) {
-                assignNetworkingLoop(period, periodPresentations, wholePresentations, totalDuration);
+                assignNetworkingLoop(period, presentations, totalDuration);
             }
         }
     }
 
-    private static void assignNetworkingLoop(Period period, List<Presentation> periodPresentations, List<Presentation> wholePresentations, long totalDuration) {
-        Presentation lastPresentation;
-        while (wholePresentations.get(periodPresentations.size() - 1).getEnd().isBefore(period.getEnd())) {
+    private static void assignNetworkingLoop(Period period, List<Presentation> presentations, long totalDuration) {
+        if (period.getPresentations().size() > 0) {
+            while (period.getPresentations().get(period.getPresentations().size() - 1).getEnd().isBefore(period.getEnd())) {
 
-            lastPresentation = periodPresentations.get(periodPresentations.size() - 1);
+                Presentation lastPresentation = period.getPresentations().get(period.getPresentations().size() - 1);
 
-            long offset = Duration.between(lastPresentation.getEnd(), period.getEnd()).toMinutes();
+                long offset = Duration.between(lastPresentation.getEnd(), period.getEnd()).toMinutes();
 
-            long networkingDuration = getNetworkingDuration(offset);
+                long networkingDuration = getNetworkingDuration(offset);
 
-            Presentation networking = Presentation.builder()
-                    .type(PresentationType.NETWORKING.name())
-                    .start(lastPresentation.getEnd())
-                    .end(lastPresentation.getEnd().plusMinutes(networkingDuration))
-                    .build();
+                Presentation networking = Presentation.builder()
+                        .type(PresentationType.NETWORKING.name())
+                        .name(PresentationType.NETWORKING.name())
+                        .duration((int) networkingDuration)
+                        .start(lastPresentation.getEnd())
+                        .end(lastPresentation.getEnd().plusMinutes(networkingDuration))
+                        .build();
 
-            wholePresentations.add(networking);
+                period.getPresentations().add(networking);
+                presentations.add(networking);
 
-            totalDuration += networkingDuration;
+                totalDuration += networkingDuration;
+            }
         }
     }
 

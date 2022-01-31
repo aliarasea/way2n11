@@ -18,8 +18,9 @@
         <div th:if="${periodMap.key.toString() == 'AM'}">
             <span th:text="${periodMap.key}"/>
             <div th:each="presentation: ${periodMap.value.presentations}">
-                <span th:text="${presentation.start}"/>
+                <span th:text="${presentation.start.toLocalTime()}"/>
                 <span th:text="${presentation.name}"/>
+                <span th:text="${presentation.duration}"/>min
             </div>
         </div>
     </div>
@@ -35,8 +36,9 @@
         <div th:if="${periodMap.key.toString() == 'PM'}">
             <span th:text="${periodMap.key}"/>
             <div th:each="presentation: ${periodMap.value.presentations}">
-                <span th:text="${presentation.start}"/>
+                <span th:text="${presentation.start.toLocalTime()}"/>
                 <span th:text="${presentation.name}"/>
+                <span th:text="${presentation.duration}"/>min
             </div>
         </div>
     </div>

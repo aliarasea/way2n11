@@ -22,23 +22,23 @@ public class PresentationController {
     private final RestTemplate restTemplate;
 
     @GetMapping("/presentation")
-    public String presentationForm(Model model) {
+    public String getPresentation(Model model) {
         model.addAttribute("presentation", new Presentation());
         return "presentation";
     }
 
     @PostMapping("/presentation")
-    public String presentationForm(@ModelAttribute Presentation presentation, Model model) {
+    public String addPresentation(@ModelAttribute Presentation presentation, Model model) {
         try {
             if (StringUtils.hasText(presentation.getName()) && presentation.getDuration() > 0) {
                 ResponseEntity<Presentation> response =
                         restTemplate.postForEntity(API_URL + "/presentation/add", presentation, Presentation.class);
 
-                return response.getStatusCode().is2xxSuccessful() ? presentationForm(model) : "error";
+                return response.getStatusCode().is2xxSuccessful() ? getPresentation(model) : "error";
             }
         } catch (Exception e) {
             return "error";
         }
-        return presentationForm(model);
+        return getPresentation(model);
     }
 }

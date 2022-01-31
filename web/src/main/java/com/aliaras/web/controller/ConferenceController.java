@@ -1,9 +1,6 @@
 package com.aliaras.web.controller;
 
-import com.aliaras.web.constant.PeriodType;
 import com.aliaras.web.model.Conference;
-import com.aliaras.web.model.Period;
-import com.aliaras.web.model.Track;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,7 +21,7 @@ public class ConferenceController {
     private final RestTemplate restTemplate;
 
     @GetMapping("/conference")
-    public String conferenceSchedule(Model model) {
+    public String createConference(Model model) {
         Conference conference = new Conference();
         conference.setName(String.format("Conference %s", LocalDateTime.now()));
         ResponseEntity<Conference> response =

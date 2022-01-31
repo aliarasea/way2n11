@@ -1,8 +1,6 @@
 package com.aliaras.api.service;
 
-import com.aliaras.api.constant.PeriodType;
 import com.aliaras.api.entity.Conference;
-import com.aliaras.api.entity.Period;
 import com.aliaras.api.entity.Presentation;
 import com.aliaras.api.entity.Track;
 import com.aliaras.api.repo.ConferenceRepository;
@@ -11,7 +9,8 @@ import com.aliaras.api.util.ConferenceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
