@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Presentation Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Presentation</h1>
+<form action="#" th:action="@{/presentation}" th:object="${presentation}" method="post">
+    <p>Name:
+        <input type="text" style="width:50%" required th:field="*{name}"/>
+    </p>
+    <p>Duration:
+        <input type="number" style="width:50%" required th:field="*{duration}"/>
+    </p>
+    <p>
+        <input type="submit" value="Add"/>
+        <input type="reset" value="Reset"/>
+    </p>
+</form>
+<br/>
+<a th:href="@{/conference}">Create Conference</a>
+</body>
+</html>

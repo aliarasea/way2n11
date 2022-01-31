@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Conference</title>
+</head>
+<body th:object="${conference}">
+<h1>Conference Info</h1>
+<div>
+    <label>Name:</label>
+    <span th:text="${conference.name}"></span>
+</div>
+<br/>
+<div th:each="track: ${conference.tracks}">
+    <strong th:text="${track.name}"/>
+
+    <div th:each="periodMap: ${track.periods}">
+        <div th:if="${periodMap.key.toString() == 'AM'}">
+            <span th:text="${periodMap.key}"/>
+            <div th:each="presentation: ${periodMap.value.presentations}">
+                <span th:text="${presentation.start}"/>
+                <span th:text="${presentation.name}"/>
+            </div>
+        </div>
+    </div>
+
+    <div th:each="periodMap: ${track.periods}">
+        <div th:if="${periodMap.key.toString() == 'LAUNCH'}">
+            <span th:text="${periodMap.key}"/>
+            <span>BREAK</span>
+        </div>
+    </div>
+
+    <div th:each="periodMap: ${track.periods}">
+        <div th:if="${periodMap.key.toString() == 'PM'}">
+            <span th:text="${periodMap.key}"/>
+            <div th:each="presentation: ${periodMap.value.presentations}">
+                <span th:text="${presentation.start}"/>
+                <span th:text="${presentation.name}"/>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+    <hr/>
+</div>
+</body>
+</html>
